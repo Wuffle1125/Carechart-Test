@@ -1,0 +1,33 @@
+@import 'src/styles/palette';
+@import 'src/styles/ant-design';
+@import 'src/styles/variables';
+@import 'src/styles/media-breakpoint';
+@import 'src/styles/fonts';
+@import 'src/styles/crx-card';
+@import 'src/styles/utils';
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  margin: 0;
+}
+
+.root {
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    margin-bottom: 16px;
+  }
+}

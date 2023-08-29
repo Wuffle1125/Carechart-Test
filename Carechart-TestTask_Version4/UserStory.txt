@@ -1,0 +1,19 @@
+As a user, I want to see "other issues" section in Health History page
+
+1. this section goes after "Cancer" item in "Health History" form
+2. there should be a question: "Are there any other issues that are bothering you?"
+3. next there should be a headers row: "Issue", "Year of onset"
+4. next there should be a list of items (Issue/YearOfOnset) - list component with CRUD functionality 
+5. all data should be saved to Firebase Firestore database (automatically, once data is entered on the page)
+
+DevNotes:
+1. Need to implement list component with CRUD functionality. "List item" form should be passed as an external component
+2. List component accepts as an input:
+  - value: T[]
+  - onChange: (value: T[]) => void;
+  - form item component (either as renderProps, or through children props)
+3. List component should be rendered in html as <ul><li></li></ul>
+4. "Add new item" element is at the bottom, on the right there is a button with the "+" icon, clicking on it adds an element to the list, the onChange event fires
+5. On the right next to every list item, there is a button with an icon 🗑️, clicking on it deletes the element, fires the onChange event
+6. List item component interface - (value: T, onChange: (value: T) => void)
+7. When editing a list item, onChange is called after input is completed, and there was no input from user for last 500ms

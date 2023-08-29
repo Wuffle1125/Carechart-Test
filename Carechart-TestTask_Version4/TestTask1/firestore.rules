@@ -1,0 +1,112 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth.uid != null;
+    }
+
+    function isClinician() {
+      return isAuthenticated() && request.auth.token.role == 'Clinician';
+    }
+
+    function isAuthor(field) {
+      return field == request.auth.uid;
+    }
+
+    // Please keep rules alphabetically sorted starting from this line
+
+    match /patients/{id} {
+      allow read: if isAuthor(id) || isClinician();
+      allow write: if isAuthor(id) || isClinician();
+
+      match /clinicianWorksheets/{worksheetId} {
+        allow read, write: if isClinician();
+      }
+
+      match /goals/{goalId} {
+        allow read, write: if isClinician();
+      }
+
+      match /scores/{scoreId} {
+        allow read: if isClinician();
+        allow create: if isClinician();
+        allow update: if isClinician()
+          && request.resource.data.date == resource.data.date
+          && request.resource.data.sectionId == resource.data.sectionId
+          && request.resource.data.score >= 0;
+      }
+
+      match /inventoriesCgs/{invId} {
+        allow read: if isAuthor(id) || isClinician();
+        allow write: if isAuthor(id);
+      }
+
+      match /onboardings/{onboardingId} {
+        allow read, write: if isAuthor(id);
+      }
+
+      match /problems/{problemId} {
+        allow read, write: if isClinician();
+      }
+
+      match /qualityOfLife/{qId} {
+        allow read: if isAuthor(id) || isClinician();
+        allow write: if isAuthor(id);
+      }
+
+      match /howAreYou/{xId} {
+        allow read, write: if isAuthor(id);
+      }
+
+      match /sectionAnswers/{answerId} {
+        allow read, write: if isClinician();
+      }
+
+      match /subSymptoms/{subSymptomsId} {
+        allow read, write: if isAuthor(id) || isClinician();
+      }
+
+      match /symptomCalcInfo/{symptomId} {
+        allow read, write: if isAuthor(id) || isClinician();
+      }
+
+      match /symptoms/{symptomId} {
+        allow read, write: if isAuthor(id) || isClinician();
+      }
+
+    }
+
+    match /patientAllergies/{id} {
+      allow read, write: if isAuthor(id) || isClinician();
+
+      match /{document=**} {
+      	allow read, write: if isAuthor(id) || isClinician();
+      }
+    }
+
+    match /patientFamilyHistories/{id} {
+      allow read, write: if isAuthor(id) || isClinician();
+    }
+
+    match /patientHealthHistories/{id} {
+      allow read, write: if isAuthor(id) || isClinician();
+
+      match /{document=**} {
+      	allow read, write: if isAuthor(id) || isClinician();
+      }
+    }
+
+    match /patientInjuries/{id} {
+      allow read, write: if isAuthor(id) || isClinician();
+    }
+
+    match /patientProfiles/{id} {
+      allow read, write: if isAuthor(id) || isClinician();
+    }
+
+    match /treatmentGoals/{id} {
+      allow read, write: if isClinician();
+    }
+  }
+}
